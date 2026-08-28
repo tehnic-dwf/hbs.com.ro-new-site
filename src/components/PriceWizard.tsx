@@ -93,19 +93,22 @@ export function PriceWizard({
   const pending = useMemo(() => {
     const next: { key: StepKey; options: string[] }[] = [];
     const partial: Selection = { ...sel };
+    const auto: StepKey[] = [];
     for (const key of stepKeys) {
       if (partial[key]) continue;
       const options = optionsFor(key, partial);
       if (options.length === 0) continue;
       if (options.length === 1 && options[0]) {
         partial[key] = options[0];
+        auto.push(key);
         continue;
       }
       next.push({ key, options });
       break;
     }
-    return { step: next[0], resolved: partial };
+    return { step: next[0], resolved: partial, auto };
   }, [sel]);
+
 
   const unit = unitFor(pending.resolved);
   const thresholds = thresholdsFor(pending.resolved);
