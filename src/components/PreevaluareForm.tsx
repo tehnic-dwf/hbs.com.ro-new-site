@@ -132,7 +132,7 @@ export function PreevaluareForm({
 
   if (trimis) {
     return (
-      <div className="rounded-lg border-2 border-primary bg-accent p-5">
+      <div className={bare ? "" : "rounded-lg border-2 border-primary bg-accent p-5"}>
         <h3 className="font-display text-xl font-bold text-foreground">
           Am notat. Mai lipsesc pozele.
         </h3>
