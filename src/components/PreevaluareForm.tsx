@@ -68,10 +68,13 @@ function OptionList({
 export function PreevaluareForm({
   contextLabel,
   prefillSummary,
+  bare = false,
 }: {
   contextLabel: string;
   /** Când e prezent (ex. după calculator), sărim peste întrebările deja răspunse. */
   prefillSummary?: string | undefined;
+  /** Când e true, randează fără card propriu — pentru uz în interiorul altui card. */
+  bare?: boolean;
 }) {
   const contactOnly = Boolean(prefillSummary);
   const [step, setStep] = useState(contactOnly ? 2 : 0);
@@ -129,7 +132,7 @@ export function PreevaluareForm({
 
   if (trimis) {
     return (
-      <div className="rounded-lg border-2 border-primary bg-accent p-5">
+      <div className={bare ? "" : "rounded-lg border-2 border-primary bg-accent p-5"}>
         <h3 className="font-display text-xl font-bold text-foreground">
           Am notat. Mai lipsesc pozele.
         </h3>
@@ -159,7 +162,7 @@ export function PreevaluareForm({
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
+    <div className={bare ? "" : "rounded-lg border border-border bg-card p-4 shadow-sm"}>
       <div className="mb-4 flex items-center gap-2">
         {(contactOnly ? [2] : [0, 1, 2]).map((i) => (
           <span
