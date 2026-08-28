@@ -65,8 +65,16 @@ function OptionList({
   );
 }
 
-export function PreevaluareForm({ contextLabel }: { contextLabel: string }) {
-  const [step, setStep] = useState(0);
+export function PreevaluareForm({
+  contextLabel,
+  prefillSummary,
+}: {
+  contextLabel: string;
+  /** Când e prezent (ex. după calculator), sărim peste întrebările deja răspunse. */
+  prefillSummary?: string | undefined;
+}) {
+  const contactOnly = Boolean(prefillSummary);
+  const [step, setStep] = useState(contactOnly ? 2 : 0);
   const [simptom, setSimptom] = useState("");
   const [suprafata, setSuprafata] = useState("");
   const [interventii, setInterventii] = useState("");
@@ -76,14 +84,20 @@ export function PreevaluareForm({ contextLabel }: { contextLabel: string }) {
   const [trimis, setTrimis] = useState(false);
   const [seTrimite, setSeTrimite] = useState(false);
 
-  const rezumat = [
-    `Preevaluare ${contextLabel}`,
-    `Simptom: ${simptom || "-"}`,
-    `Suprafață: ${suprafata || "-"}`,
-    `Intervenții anterioare: ${interventii || "-"}`,
-    `Nume: ${nume || "-"}`,
-    `Telefon: ${telefon || "-"}`,
-  ].join("\n");
+  const rezumat = (
+    contactOnly
+      ? [`Preevaluare ${contextLabel}`, prefillSummary ?? "", `Nume: ${nume || "-"}`, `Telefon: ${telefon || "-"}`]
+      : [
+          `Preevaluare ${contextLabel}`,
+          `Simptom: ${simptom || "-"}`,
+          `Suprafață: ${suprafata || "-"}`,
+          `Intervenții anterioare: ${interventii || "-"}`,
+          `Nume: ${nume || "-"}`,
+          `Telefon: ${telefon || "-"}`,
+        ]
+  )
+    .filter(Boolean)
+    .join("\n");
 
   async function trimite() {
     if (!nume.trim() || telefon.replace(/\D/g, "").length < 9) {
@@ -147,7 +161,7 @@ export function PreevaluareForm({ contextLabel }: { contextLabel: string }) {
   return (
     <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
       <div className="mb-4 flex items-center gap-2">
-        {[0, 1, 2].map((i) => (
+        {(contactOnly ? [2] : [0, 1, 2]).map((i) => (
           <span
             key={i}
             className={`h-1.5 flex-1 rounded-full ${i <= step ? "bg-primary" : "bg-border"}`}
@@ -243,6 +257,7 @@ export function PreevaluareForm({ contextLabel }: { contextLabel: string }) {
           />
           {eroare ? <p className="mt-2 text-sm font-medium text-destructive">{eroare}</p> : null}
           <div className="mt-4 flex gap-2">
+            {contactOnly ? null : (
             <button
               type="button"
               onClick={() => setStep(1)}
@@ -251,6 +266,7 @@ export function PreevaluareForm({ contextLabel }: { contextLabel: string }) {
             >
               <ChevronLeft className="h-5 w-5" aria-hidden />
             </button>
+            )}
             <button
               type="button"
               onClick={trimite}

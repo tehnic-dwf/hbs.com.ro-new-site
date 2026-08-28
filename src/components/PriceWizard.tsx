@@ -77,7 +77,7 @@ function ManualFallback({ title, body }: { title: string; body: string }) {
 export function PriceWizard({
   onOutputChange,
 }: {
-  onOutputChange?: (hasOutput: boolean) => void;
+  onOutputChange?: (hasOutput: boolean, summary?: string) => void;
 }) {
   const [zone, setZone] = useState<Zone>(null);
   const [sel, setSel] = useState<Selection>({});
@@ -112,8 +112,22 @@ export function PriceWizard({
 
   useEffect(() => {
     const hasOutput = zone === "alta" || result !== null;
-    onOutputChange?.(hasOutput);
-  }, [zone, result, onOutputChange]);
+    if (!hasOutput) {
+      onOutputChange?.(false);
+      return;
+    }
+    const lines =
+      zone === "alta"
+        ? ["Zonă: în afara Bucureștiului și Ilfovului"]
+        : [
+            ...stepKeys
+              .filter((k) => pending.resolved[k])
+              .map((k) => `${stepLabels[k]}: ${pending.resolved[k]}`),
+            Number.isFinite(numericArea) ? `Suprafață: ${numericArea} ${unit}` : "",
+          ].filter(Boolean);
+    onOutputChange?.(true, lines.join("\n"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [zone, result, suprafata, onOutputChange]);
 
   const reset = () => {
     setZone(null);
