@@ -115,24 +115,24 @@ export function PriceWizard({
       ? estimate(pending.resolved, numericArea)
       : null;
 
-  useEffect(() => {
-    const hasOutput = zone === "alta" || result !== null;
-    if (!hasOutput) {
-      onOutputChange?.(false);
-      return;
-    }
-    const lines =
-      zone === "alta"
+  const hasOutput = zone === "alta" || result !== null;
+  const summaryText = hasOutput
+    ? (zone === "alta"
         ? ["Zonă: în afara Bucureștiului și Ilfovului"]
         : [
             ...stepKeys
               .filter((k) => pending.resolved[k])
               .map((k) => `${stepLabels[k]}: ${pending.resolved[k]}`),
             Number.isFinite(numericArea) ? `Suprafață: ${numericArea} ${unit}` : "",
-          ].filter(Boolean);
-    onOutputChange?.(true, lines.join("\n"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [zone, result, suprafata, onOutputChange]);
+          ]
+      )
+        .filter(Boolean)
+        .join("\n")
+    : "";
+
+  useEffect(() => {
+    onOutputChange?.(hasOutput, summaryText || undefined);
+  }, [hasOutput, summaryText, onOutputChange]);
 
   const reset = () => {
     setZone(null);
