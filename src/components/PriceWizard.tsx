@@ -217,10 +217,18 @@ export function PriceWizard({
                 pending.resolved[k] ? (
                   <div key={k} className="flex gap-2">
                     <dt className="w-40 shrink-0 text-muted-foreground">{stepLabels[k]}</dt>
-                    <dd className="font-semibold text-foreground">{pending.resolved[k]}</dd>
+                    <dd className="font-semibold text-foreground">
+                      {pending.resolved[k]}
+                      {pending.auto.includes(k) ? (
+                        <span className="ml-2 align-middle text-xs font-normal text-muted-foreground">
+                          (singura variantă posibilă — completată automat)
+                        </span>
+                      ) : null}
+                    </dd>
                   </div>
                 ) : null,
               )}
+
                 <div className="flex gap-2">
                   <dt className="w-40 shrink-0 text-muted-foreground">Prag suprafață</dt>
                   <dd className="font-semibold text-foreground">
