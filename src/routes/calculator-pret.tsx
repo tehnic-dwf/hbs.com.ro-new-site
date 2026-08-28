@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 
 import { PriceWizard } from "@/components/PriceWizard";
 import { PreevaluareForm } from "@/components/PreevaluareForm";
@@ -22,6 +23,8 @@ export const Route = createFileRoute("/calculator-pret")({
 });
 
 function CalculatorPage() {
+  const [showPhotosForm, setShowPhotosForm] = useState(false);
+
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
       <h1 className="font-display text-3xl font-bold leading-tight text-foreground">
@@ -33,20 +36,22 @@ function CalculatorPage() {
       </p>
 
       <div className="mt-6">
-        <PriceWizard />
+        <PriceWizard onOutputChange={setShowPhotosForm} />
       </div>
 
-      <section id="preevaluare" className="mt-12 scroll-mt-20">
-        <h2 className="font-display text-2xl font-bold text-foreground">
-          Trimite poze pentru confirmare
-        </h2>
-        <p className="mt-2 text-base text-muted-foreground">
-          Pe baza pozelor confirmăm estimarea și îți spunem exact ce intervenție e necesară.
-        </p>
-        <div className="mt-5">
-          <PreevaluareForm contextLabel="Calculator de preț" />
-        </div>
-      </section>
+      {showPhotosForm ? (
+        <section id="preevaluare" className="mt-12 scroll-mt-20">
+          <h2 className="font-display text-2xl font-bold text-foreground">
+            Trimite poze pentru confirmare
+          </h2>
+          <p className="mt-2 text-base text-muted-foreground">
+            Pe baza pozelor confirmăm estimarea și îți spunem exact ce intervenție e necesară.
+          </p>
+          <div className="mt-5">
+            <PreevaluareForm contextLabel="Calculator de preț" />
+          </div>
+        </section>
+      ) : null}
     </main>
   );
 }

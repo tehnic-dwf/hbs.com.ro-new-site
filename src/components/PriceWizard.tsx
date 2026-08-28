@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, Camera, MessageCircle, Phone } from "lucide-react";
 
 import { contact, whatsappLink } from "@/lib/site";
@@ -74,7 +74,11 @@ function ManualFallback({ title, body }: { title: string; body: string }) {
   );
 }
 
-export function PriceWizard() {
+export function PriceWizard({
+  onOutputChange,
+}: {
+  onOutputChange?: (hasOutput: boolean) => void;
+}) {
   const [zone, setZone] = useState<Zone>(null);
   const [sel, setSel] = useState<Selection>({});
   const [suprafata, setSuprafata] = useState("");
@@ -105,6 +109,11 @@ export function PriceWizard() {
     submitted && Number.isFinite(numericArea) && numericArea > 0
       ? estimate(pending.resolved, numericArea)
       : null;
+
+  useEffect(() => {
+    const hasOutput = zone === "alta" || result !== null;
+    onOutputChange?.(hasOutput);
+  }, [zone, result, onOutputChange]);
 
   const reset = () => {
     setZone(null);
