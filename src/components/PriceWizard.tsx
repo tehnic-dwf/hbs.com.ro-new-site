@@ -93,19 +93,22 @@ export function PriceWizard({
   const pending = useMemo(() => {
     const next: { key: StepKey; options: string[] }[] = [];
     const partial: Selection = { ...sel };
+    const auto: StepKey[] = [];
     for (const key of stepKeys) {
       if (partial[key]) continue;
       const options = optionsFor(key, partial);
       if (options.length === 0) continue;
       if (options.length === 1 && options[0]) {
         partial[key] = options[0];
+        auto.push(key);
         continue;
       }
       next.push({ key, options });
       break;
     }
-    return { step: next[0], resolved: partial };
+    return { step: next[0], resolved: partial, auto };
   }, [sel]);
+
 
   const unit = unitFor(pending.resolved);
   const thresholds = thresholdsFor(pending.resolved);
@@ -214,10 +217,18 @@ export function PriceWizard({
                 pending.resolved[k] ? (
                   <div key={k} className="flex gap-2">
                     <dt className="w-40 shrink-0 text-muted-foreground">{stepLabels[k]}</dt>
-                    <dd className="font-semibold text-foreground">{pending.resolved[k]}</dd>
+                    <dd className="font-semibold text-foreground">
+                      {pending.resolved[k]}
+                      {pending.auto.includes(k) ? (
+                        <span className="ml-2 align-middle text-xs font-normal text-muted-foreground">
+                          (singura variantă posibilă — completată automat)
+                        </span>
+                      ) : null}
+                    </dd>
                   </div>
                 ) : null,
               )}
+
                 <div className="flex gap-2">
                   <dt className="w-40 shrink-0 text-muted-foreground">Prag suprafață</dt>
                   <dd className="font-semibold text-foreground">
