@@ -284,6 +284,7 @@ export function PriceWizard({
           <ManualFallback
             title="Aici nu avem un preț standard"
             body="Pentru această combinație fiecare caz e diferit — prețul depinde de ce găsim sub finisaj. Trimite-ne poze și îți răspundem personal."
+            {...(renderFollowUp ? { followUp: renderFollowUp(summaryText) } : {})}
           />
         )
       ) : pending.step ? (
