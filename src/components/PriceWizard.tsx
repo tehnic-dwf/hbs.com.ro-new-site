@@ -77,7 +77,7 @@ function ManualFallback({ title, body }: { title: string; body: string }) {
 export function PriceWizard({
   onOutputChange,
 }: {
-  onOutputChange?: (hasOutput: boolean) => void;
+  onOutputChange?: (hasOutput: boolean, summary?: string) => void;
 }) {
   const [zone, setZone] = useState<Zone>(null);
   const [sel, setSel] = useState<Selection>({});
