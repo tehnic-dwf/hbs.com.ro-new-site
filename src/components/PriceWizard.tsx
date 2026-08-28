@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { ArrowLeft, Camera, MessageCircle, Phone } from "lucide-react";
 
 import { contact, whatsappLink } from "@/lib/site";
@@ -40,19 +40,21 @@ function Option({
   );
 }
 
-function ManualFallback({ title, body }: { title: string; body: string }) {
+function ManualFallback({
+  title,
+  body,
+  followUp,
+}: {
+  title: string;
+  body: string;
+  followUp?: ReactNode;
+}) {
   return (
     <div className="rounded-lg border-2 border-border bg-muted/30 p-5">
       <h3 className="font-display text-xl font-bold text-foreground">{title}</h3>
       <p className="mt-2 text-base text-muted-foreground">{body}</p>
+      {followUp ? <div className="mt-5">{followUp}</div> : null}
       <div className="mt-5 flex flex-col gap-3">
-        <a
-          href="#preevaluare"
-          className="flex h-14 items-center justify-center gap-2 rounded-md bg-primary px-4 text-base font-bold text-primary-foreground"
-        >
-          <Camera className="h-5 w-5" aria-hidden />
-          Trimite poze pentru o preevaluare
-        </a>
         <a
           href={whatsappLink(wizardWhatsapp)}
           target="_blank"
@@ -76,8 +78,11 @@ function ManualFallback({ title, body }: { title: string; body: string }) {
 
 export function PriceWizard({
   onOutputChange,
+  renderFollowUp,
 }: {
   onOutputChange?: (hasOutput: boolean, summary?: string) => void;
+  /** Pașii de contact + poze, randați în interiorul cardului, sub estimare. */
+  renderFollowUp?: (summary: string) => ReactNode;
 }) {
   const [zone, setZone] = useState<Zone>(null);
   const [sel, setSel] = useState<Selection>({});
