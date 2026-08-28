@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { ArrowLeft, Camera, MessageCircle, Phone } from "lucide-react";
 
 import { contact, whatsappLink } from "@/lib/site";
@@ -40,19 +40,21 @@ function Option({
   );
 }
 
-function ManualFallback({ title, body }: { title: string; body: string }) {
+function ManualFallback({
+  title,
+  body,
+  followUp,
+}: {
+  title: string;
+  body: string;
+  followUp?: ReactNode;
+}) {
   return (
     <div className="rounded-lg border-2 border-border bg-muted/30 p-5">
       <h3 className="font-display text-xl font-bold text-foreground">{title}</h3>
       <p className="mt-2 text-base text-muted-foreground">{body}</p>
+      {followUp ? <div className="mt-5">{followUp}</div> : null}
       <div className="mt-5 flex flex-col gap-3">
-        <a
-          href="#preevaluare"
-          className="flex h-14 items-center justify-center gap-2 rounded-md bg-primary px-4 text-base font-bold text-primary-foreground"
-        >
-          <Camera className="h-5 w-5" aria-hidden />
-          Trimite poze pentru o preevaluare
-        </a>
         <a
           href={whatsappLink(wizardWhatsapp)}
           target="_blank"
@@ -76,8 +78,11 @@ function ManualFallback({ title, body }: { title: string; body: string }) {
 
 export function PriceWizard({
   onOutputChange,
+  renderFollowUp,
 }: {
   onOutputChange?: (hasOutput: boolean, summary?: string) => void;
+  /** Pașii de contact + poze, randați în interiorul cardului, sub estimare. */
+  renderFollowUp?: (summary: string) => ReactNode;
 }) {
   const [zone, setZone] = useState<Zone>(null);
   const [sel, setSel] = useState<Selection>({});
@@ -110,24 +115,24 @@ export function PriceWizard({
       ? estimate(pending.resolved, numericArea)
       : null;
 
-  useEffect(() => {
-    const hasOutput = zone === "alta" || result !== null;
-    if (!hasOutput) {
-      onOutputChange?.(false);
-      return;
-    }
-    const lines =
-      zone === "alta"
+  const hasOutput = zone === "alta" || result !== null;
+  const summaryText = hasOutput
+    ? (zone === "alta"
         ? ["Zonă: în afara Bucureștiului și Ilfovului"]
         : [
             ...stepKeys
               .filter((k) => pending.resolved[k])
               .map((k) => `${stepLabels[k]}: ${pending.resolved[k]}`),
             Number.isFinite(numericArea) ? `Suprafață: ${numericArea} ${unit}` : "",
-          ].filter(Boolean);
-    onOutputChange?.(true, lines.join("\n"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [zone, result, suprafata, onOutputChange]);
+          ]
+      )
+        .filter(Boolean)
+        .join("\n")
+    : "";
+
+  useEffect(() => {
+    onOutputChange?.(hasOutput, summaryText || undefined);
+  }, [hasOutput, summaryText, onOutputChange]);
 
   const reset = () => {
     setZone(null);
@@ -179,6 +184,7 @@ export function PriceWizard({
         <ManualFallback
           title="În afara zonei noastre curente"
           body="Nu avem un preț standard pentru lucrări în afara Bucureștiului și Ilfovului. Trimite-ne poze și îți spunem dacă putem prelua lucrarea și în ce condiții."
+          {...(renderFollowUp ? { followUp: renderFollowUp(summaryText) } : {})}
         />
       ) : result ? (
         result.kind === "price" ? (
@@ -199,7 +205,11 @@ export function PriceWizard({
               fără TVA, pentru {result.suprafata} {unit}
             </p>
 
-            <dl className="mt-5 space-y-2 border-t border-border pt-4 text-sm">
+            <details className="mt-5 border-t border-border pt-4" open={!renderFollowUp}>
+              <summary className="cursor-pointer text-sm font-semibold text-muted-foreground">
+                Detaliile lucrării
+              </summary>
+              <dl className="mt-3 space-y-2 text-sm">
               {stepKeys.map((k) =>
                 pending.resolved[k] ? (
                   <div key={k} className="flex gap-2">
@@ -208,13 +218,14 @@ export function PriceWizard({
                   </div>
                 ) : null,
               )}
-              <div className="flex gap-2">
-                <dt className="w-40 shrink-0 text-muted-foreground">Prag suprafață</dt>
-                <dd className="font-semibold text-foreground">
-                  {result.row.pragSuprafata} {unit}
-                </dd>
-              </div>
-            </dl>
+                <div className="flex gap-2">
+                  <dt className="w-40 shrink-0 text-muted-foreground">Prag suprafață</dt>
+                  <dd className="font-semibold text-foreground">
+                    {result.row.pragSuprafata} {unit}
+                  </dd>
+                </div>
+              </dl>
+            </details>
 
             {result.outOfRange ? (
               <p className="mt-4 rounded-md bg-muted/40 p-3 text-sm text-muted-foreground">
@@ -228,14 +239,29 @@ export function PriceWizard({
               ne trimiți pozele.
             </p>
 
+            {renderFollowUp ? (
+              <div className="mt-6 border-t border-border pt-6">
+                <h3 className="font-display text-xl font-bold text-foreground">
+                  Confirmă estimarea cu poze
+                </h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Lăsăm datele de contact, apoi trimiți 3–4 poze. Estimarea de mai sus rămâne
+                  atașată cererii tale.
+                </p>
+                <div className="mt-4">{renderFollowUp(summaryText)}</div>
+              </div>
+            ) : null}
+
             <div className="mt-5 flex flex-col gap-3">
-              <a
-                href="#preevaluare"
-                className="flex h-14 items-center justify-center gap-2 rounded-md bg-primary px-4 text-base font-bold text-primary-foreground"
-              >
-                <Camera className="h-5 w-5" aria-hidden />
-                Trimite poze pentru confirmare
-              </a>
+              {renderFollowUp ? null : (
+                <a
+                  href="#preevaluare"
+                  className="flex h-14 items-center justify-center gap-2 rounded-md bg-primary px-4 text-base font-bold text-primary-foreground"
+                >
+                  <Camera className="h-5 w-5" aria-hidden />
+                  Trimite poze pentru confirmare
+                </a>
+              )}
               <a
                 href={whatsappLink(wizardWhatsapp)}
                 target="_blank"
@@ -258,6 +284,7 @@ export function PriceWizard({
           <ManualFallback
             title="Aici nu avem un preț standard"
             body="Pentru această combinație fiecare caz e diferit — prețul depinde de ce găsim sub finisaj. Trimite-ne poze și îți răspundem personal."
+            {...(renderFollowUp ? { followUp: renderFollowUp(summaryText) } : {})}
           />
         )
       ) : pending.step ? (
