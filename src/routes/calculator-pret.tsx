@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
 
 import { PriceWizard } from "@/components/PriceWizard";
 import { PreevaluareForm } from "@/components/PreevaluareForm";
@@ -23,14 +22,6 @@ export const Route = createFileRoute("/calculator-pret")({
 });
 
 function CalculatorPage() {
-  const [showPhotosForm, setShowPhotosForm] = useState(false);
-  const [wizardSummary, setWizardSummary] = useState("");
-
-  const handleOutput = useCallback((hasOutput: boolean, summary?: string) => {
-    setShowPhotosForm(hasOutput);
-    setWizardSummary(summary ?? "");
-  }, []);
-
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
       <h1 className="font-display text-3xl font-bold leading-tight text-foreground">
@@ -41,27 +32,16 @@ function CalculatorPage() {
         nostru intern. E o estimare orientativă — devizul final îl primești după ce ne trimiți poze.
       </p>
 
-      <div className="mt-6">
-        <PriceWizard onOutputChange={handleOutput} />
-      </div>
-
-      {showPhotosForm ? (
-        <section id="preevaluare" className="mt-12 scroll-mt-20">
-          <h2 className="font-display text-2xl font-bold text-foreground">
-            Trimite poze pentru confirmare
-          </h2>
-          <p className="mt-2 text-base text-muted-foreground">
-            Am reținut deja răspunsurile din calculator. Mai avem nevoie doar de datele tale de
-            contact și de 3–4 poze cu lucrarea.
-          </p>
-          <div className="mt-5">
+      <div className="mt-6" id="preevaluare">
+        <PriceWizard
+          renderFollowUp={(summary) => (
             <PreevaluareForm
               contextLabel="Calculator de preț"
-              prefillSummary={wizardSummary || undefined}
+              prefillSummary={summary || "Estimare din calculator"}
             />
-          </div>
-        </section>
-      ) : null}
+          )}
+        />
+      </div>
     </main>
   );
 }
