@@ -84,14 +84,20 @@ export function PreevaluareForm({
   const [trimis, setTrimis] = useState(false);
   const [seTrimite, setSeTrimite] = useState(false);
 
-  const rezumat = [
-    `Preevaluare ${contextLabel}`,
-    `Simptom: ${simptom || "-"}`,
-    `Suprafață: ${suprafata || "-"}`,
-    `Intervenții anterioare: ${interventii || "-"}`,
-    `Nume: ${nume || "-"}`,
-    `Telefon: ${telefon || "-"}`,
-  ].join("\n");
+  const rezumat = (
+    contactOnly
+      ? [`Preevaluare ${contextLabel}`, prefillSummary ?? "", `Nume: ${nume || "-"}`, `Telefon: ${telefon || "-"}`]
+      : [
+          `Preevaluare ${contextLabel}`,
+          `Simptom: ${simptom || "-"}`,
+          `Suprafață: ${suprafata || "-"}`,
+          `Intervenții anterioare: ${interventii || "-"}`,
+          `Nume: ${nume || "-"}`,
+          `Telefon: ${telefon || "-"}`,
+        ]
+  )
+    .filter(Boolean)
+    .join("\n");
 
   async function trimite() {
     if (!nume.trim() || telefon.replace(/\D/g, "").length < 9) {
@@ -155,7 +161,7 @@ export function PreevaluareForm({
   return (
     <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
       <div className="mb-4 flex items-center gap-2">
-        {[0, 1, 2].map((i) => (
+        {(contactOnly ? [2] : [0, 1, 2]).map((i) => (
           <span
             key={i}
             className={`h-1.5 flex-1 rounded-full ${i <= step ? "bg-primary" : "bg-border"}`}
@@ -251,6 +257,7 @@ export function PreevaluareForm({
           />
           {eroare ? <p className="mt-2 text-sm font-medium text-destructive">{eroare}</p> : null}
           <div className="mt-4 flex gap-2">
+            {contactOnly ? null : (
             <button
               type="button"
               onClick={() => setStep(1)}
@@ -259,6 +266,7 @@ export function PreevaluareForm({
             >
               <ChevronLeft className="h-5 w-5" aria-hidden />
             </button>
+            )}
             <button
               type="button"
               onClick={trimite}
