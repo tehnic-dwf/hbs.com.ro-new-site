@@ -68,10 +68,13 @@ function OptionList({
 export function PreevaluareForm({
   contextLabel,
   prefillSummary,
+  bare = false,
 }: {
   contextLabel: string;
   /** Când e prezent (ex. după calculator), sărim peste întrebările deja răspunse. */
   prefillSummary?: string | undefined;
+  /** Când e true, randează fără card propriu — pentru uz în interiorul altui card. */
+  bare?: boolean;
 }) {
   const contactOnly = Boolean(prefillSummary);
   const [step, setStep] = useState(contactOnly ? 2 : 0);
