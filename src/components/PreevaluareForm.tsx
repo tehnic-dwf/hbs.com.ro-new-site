@@ -71,7 +71,7 @@ export function PreevaluareForm({
 }: {
   contextLabel: string;
   /** Când e prezent (ex. după calculator), sărim peste întrebările deja răspunse. */
-  prefillSummary?: string;
+  prefillSummary?: string | undefined;
 }) {
   const contactOnly = Boolean(prefillSummary);
   const [step, setStep] = useState(contactOnly ? 2 : 0);
