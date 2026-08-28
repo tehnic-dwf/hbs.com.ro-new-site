@@ -38,6 +38,7 @@ function CalculatorPage() {
             <PreevaluareForm
               contextLabel="Calculator de preț"
               prefillSummary={summary || "Estimare din calculator"}
+              bare
             />
           )}
         />
