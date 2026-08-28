@@ -110,6 +110,11 @@ export function PriceWizard({
       ? estimate(pending.resolved, numericArea)
       : null;
 
+  useEffect(() => {
+    const hasOutput = zone === "alta" || result !== null;
+    onOutputChange?.(hasOutput);
+  }, [zone, result, onOutputChange]);
+
   const reset = () => {
     setZone(null);
     setSel({});
