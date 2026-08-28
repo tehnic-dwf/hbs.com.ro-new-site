@@ -208,7 +208,7 @@ export function PriceWizard({
               fără TVA, pentru {result.suprafata} {unit}
             </p>
 
-            <details className="mt-5 border-t border-border pt-4" open={!renderFollowUp}>
+            <details className="mt-5 border-t border-border pt-4" open>
               <summary className="cursor-pointer text-sm font-semibold text-muted-foreground">
                 Detaliile lucrării
               </summary>
