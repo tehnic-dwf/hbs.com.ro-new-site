@@ -67,8 +67,8 @@ export const proof = {
 };
 
 export const nav = [
-  { to: "/", label: "Acasă" },
   { to: "/calculator-pret", label: "Calculator de preț" },
+  { to: "/", label: "Acasă" },
   { to: "/hidroizolatii-terase-circulabile", label: "Terase circulabile" },
   { to: "/ghid-proprietar-terasa", label: "Ghidul proprietarului" },
 ] as const;
