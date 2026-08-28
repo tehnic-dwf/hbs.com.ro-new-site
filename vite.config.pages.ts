@@ -22,6 +22,7 @@ export default defineConfig({
     },
     pages: [
       { path: "/", prerender: { enabled: true } },
+      { path: "/calculator-pret", prerender: { enabled: true } },
       { path: "/hidroizolatii-terase-circulabile", prerender: { enabled: true } },
       { path: "/ghid-proprietar-terasa", prerender: { enabled: true } },
     ],

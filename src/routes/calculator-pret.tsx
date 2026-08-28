@@ -44,7 +44,7 @@ function CalculatorPage() {
           Pe baza pozelor confirmăm estimarea și îți spunem exact ce intervenție e necesară.
         </p>
         <div className="mt-5">
-          <PreevaluareForm />
+          <PreevaluareForm contextLabel="Calculator de preț" />
         </div>
       </section>
     </main>

@@ -68,6 +68,7 @@ export const proof = {
 
 export const nav = [
   { to: "/", label: "Acasă" },
+  { to: "/calculator-pret", label: "Calculator de preț" },
   { to: "/hidroizolatii-terase-circulabile", label: "Terase circulabile" },
   { to: "/ghid-proprietar-terasa", label: "Ghidul proprietarului" },
 ] as const;
@@ -181,6 +182,7 @@ export const menuGroups: MenuGroup[] = [
   {
     label: "Resurse și companie",
     items: [
+      { label: "Calculator de preț", to: "/calculator-pret" },
       { label: "Ghidul proprietarului de terasă (7 verificări)", to: "/ghid-proprietar-terasa" },
       { label: "Despre noi", href: `${SITE}/despre-noi/` },
       { label: "Importanța hidroizolațiilor", href: `${SITE}/importanta-hidroizolatiilor/` },
