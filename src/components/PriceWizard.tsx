@@ -84,11 +84,6 @@ export function PriceWizard({
   const [suprafata, setSuprafata] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
-    const hasOutput = zone === "alta" || result !== null;
-    onOutputChange?.(hasOutput);
-  }, [zone, result, onOutputChange]);
-
   /** Pașii rămași de completat, calculați din date: se sare peste cei cu o singură variantă. */
   const pending = useMemo(() => {
     const next: { key: StepKey; options: string[] }[] = [];
