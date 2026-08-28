@@ -65,8 +65,16 @@ function OptionList({
   );
 }
 
-export function PreevaluareForm({ contextLabel }: { contextLabel: string }) {
-  const [step, setStep] = useState(0);
+export function PreevaluareForm({
+  contextLabel,
+  prefillSummary,
+}: {
+  contextLabel: string;
+  /** Când e prezent (ex. după calculator), sărim peste întrebările deja răspunse. */
+  prefillSummary?: string;
+}) {
+  const contactOnly = Boolean(prefillSummary);
+  const [step, setStep] = useState(contactOnly ? 2 : 0);
   const [simptom, setSimptom] = useState("");
   const [suprafata, setSuprafata] = useState("");
   const [interventii, setInterventii] = useState("");
