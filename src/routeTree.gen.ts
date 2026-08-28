@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CalculatorPretRouteImport } from './routes/calculator-pret'
 import { Route as GhidProprietarTerasaRouteImport } from './routes/ghid-proprietar-terasa'
 import { Route as HidroizolatiiTeraseCirculabileRouteImport } from './routes/hidroizolatii-terase-circulabile'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculatorPretRoute = CalculatorPretRouteImport.update({
+  id: '/calculator-pret',
+  path: '/calculator-pret',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GhidProprietarTerasaRoute = GhidProprietarTerasaRouteImport.update({
@@ -32,35 +38,47 @@ const HidroizolatiiTeraseCirculabileRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/calculator-pret': typeof CalculatorPretRoute
   '/ghid-proprietar-terasa': typeof GhidProprietarTerasaRoute
   '/hidroizolatii-terase-circulabile': typeof HidroizolatiiTeraseCirculabileRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/calculator-pret': typeof CalculatorPretRoute
   '/ghid-proprietar-terasa': typeof GhidProprietarTerasaRoute
   '/hidroizolatii-terase-circulabile': typeof HidroizolatiiTeraseCirculabileRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/calculator-pret': typeof CalculatorPretRoute
   '/ghid-proprietar-terasa': typeof GhidProprietarTerasaRoute
   '/hidroizolatii-terase-circulabile': typeof HidroizolatiiTeraseCirculabileRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/ghid-proprietar-terasa' | '/hidroizolatii-terase-circulabile'
+    | '/'
+    | '/calculator-pret'
+    | '/ghid-proprietar-terasa'
+    | '/hidroizolatii-terase-circulabile'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/ghid-proprietar-terasa' | '/hidroizolatii-terase-circulabile'
+  to:
+    | '/'
+    | '/calculator-pret'
+    | '/ghid-proprietar-terasa'
+    | '/hidroizolatii-terase-circulabile'
   id:
     | '__root__'
     | '/'
+    | '/calculator-pret'
     | '/ghid-proprietar-terasa'
     | '/hidroizolatii-terase-circulabile'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CalculatorPretRoute: typeof CalculatorPretRoute
   GhidProprietarTerasaRoute: typeof GhidProprietarTerasaRoute
   HidroizolatiiTeraseCirculabileRoute: typeof HidroizolatiiTeraseCirculabileRoute
 }
@@ -72,6 +90,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculator-pret': {
+      id: '/calculator-pret'
+      path: '/calculator-pret'
+      fullPath: '/calculator-pret'
+      preLoaderRoute: typeof CalculatorPretRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ghid-proprietar-terasa': {
@@ -93,6 +118,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CalculatorPretRoute: CalculatorPretRoute,
   GhidProprietarTerasaRoute: GhidProprietarTerasaRoute,
   HidroizolatiiTeraseCirculabileRoute: HidroizolatiiTeraseCirculabileRoute,
 }
