@@ -115,8 +115,8 @@ export const stepKeys = [
   "serviciu",
   "tipLucrare",
   "varianta",
-  "variantaSecundara",
   "amplasament",
+  "variantaSecundara",
 ] as const;
 
 export type StepKey = (typeof stepKeys)[number];
