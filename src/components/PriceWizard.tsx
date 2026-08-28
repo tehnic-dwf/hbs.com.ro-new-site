@@ -74,11 +74,20 @@ function ManualFallback({ title, body }: { title: string; body: string }) {
   );
 }
 
-export function PriceWizard() {
+export function PriceWizard({
+  onOutputChange,
+}: {
+  onOutputChange?: (hasOutput: boolean) => void;
+}) {
   const [zone, setZone] = useState<Zone>(null);
   const [sel, setSel] = useState<Selection>({});
   const [suprafata, setSuprafata] = useState("");
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    const hasOutput = zone === "alta" || result !== null;
+    onOutputChange?.(hasOutput);
+  }, [zone, result, onOutputChange]);
 
   /** Pașii rămași de completat, calculați din date: se sare peste cei cu o singură variantă. */
   const pending = useMemo(() => {
