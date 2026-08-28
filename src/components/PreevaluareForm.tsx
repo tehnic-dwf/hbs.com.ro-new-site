@@ -162,7 +162,7 @@ export function PreevaluareForm({
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
+    <div className={bare ? "" : "rounded-lg border border-border bg-card p-4 shadow-sm"}>
       <div className="mb-4 flex items-center gap-2">
         {(contactOnly ? [2] : [0, 1, 2]).map((i) => (
           <span
