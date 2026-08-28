@@ -184,6 +184,7 @@ export function PriceWizard({
         <ManualFallback
           title="În afara zonei noastre curente"
           body="Nu avem un preț standard pentru lucrări în afara Bucureștiului și Ilfovului. Trimite-ne poze și îți spunem dacă putem prelua lucrarea și în ce condiții."
+          {...(renderFollowUp ? { followUp: renderFollowUp(summaryText) } : {})}
         />
       ) : result ? (
         result.kind === "price" ? (
@@ -204,7 +205,11 @@ export function PriceWizard({
               fără TVA, pentru {result.suprafata} {unit}
             </p>
 
-            <dl className="mt-5 space-y-2 border-t border-border pt-4 text-sm">
+            <details className="mt-5 border-t border-border pt-4" open={!renderFollowUp}>
+              <summary className="cursor-pointer text-sm font-semibold text-muted-foreground">
+                Detaliile lucrării
+              </summary>
+              <dl className="mt-3 space-y-2 text-sm">
               {stepKeys.map((k) =>
                 pending.resolved[k] ? (
                   <div key={k} className="flex gap-2">
@@ -213,13 +218,14 @@ export function PriceWizard({
                   </div>
                 ) : null,
               )}
-              <div className="flex gap-2">
-                <dt className="w-40 shrink-0 text-muted-foreground">Prag suprafață</dt>
-                <dd className="font-semibold text-foreground">
-                  {result.row.pragSuprafata} {unit}
-                </dd>
-              </div>
-            </dl>
+                <div className="flex gap-2">
+                  <dt className="w-40 shrink-0 text-muted-foreground">Prag suprafață</dt>
+                  <dd className="font-semibold text-foreground">
+                    {result.row.pragSuprafata} {unit}
+                  </dd>
+                </div>
+              </dl>
+            </details>
 
             {result.outOfRange ? (
               <p className="mt-4 rounded-md bg-muted/40 p-3 text-sm text-muted-foreground">
@@ -233,14 +239,29 @@ export function PriceWizard({
               ne trimiți pozele.
             </p>
 
+            {renderFollowUp ? (
+              <div className="mt-6 border-t border-border pt-6">
+                <h3 className="font-display text-xl font-bold text-foreground">
+                  Confirmă estimarea cu poze
+                </h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Lăsăm datele de contact, apoi trimiți 3–4 poze. Estimarea de mai sus rămâne
+                  atașată cererii tale.
+                </p>
+                <div className="mt-4">{renderFollowUp(summaryText)}</div>
+              </div>
+            ) : null}
+
             <div className="mt-5 flex flex-col gap-3">
-              <a
-                href="#preevaluare"
-                className="flex h-14 items-center justify-center gap-2 rounded-md bg-primary px-4 text-base font-bold text-primary-foreground"
-              >
-                <Camera className="h-5 w-5" aria-hidden />
-                Trimite poze pentru confirmare
-              </a>
+              {renderFollowUp ? null : (
+                <a
+                  href="#preevaluare"
+                  className="flex h-14 items-center justify-center gap-2 rounded-md bg-primary px-4 text-base font-bold text-primary-foreground"
+                >
+                  <Camera className="h-5 w-5" aria-hidden />
+                  Trimite poze pentru confirmare
+                </a>
+              )}
               <a
                 href={whatsappLink(wizardWhatsapp)}
                 target="_blank"
