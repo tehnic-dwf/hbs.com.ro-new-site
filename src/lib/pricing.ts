@@ -67,7 +67,9 @@ const num = (v: string) => {
 };
 
 export const priceRows: PriceRow[] = (() => {
-  const [header, ...body] = parseCsv(csvRaw);
+  const parsed = parseCsv(csvRaw);
+  const header = parsed[0] ?? [];
+  const body = parsed.slice(1);
   const idx = (name: string) => header.indexOf(name);
   const c = {
     id: idx("id"),
@@ -161,7 +163,7 @@ export function parseThreshold(label: string): Threshold {
 
 export type Estimate =
   | { kind: "price"; row: PriceRow; suprafata: number; totalMin: number; totalMax: number; outOfRange: boolean }
-  | { kind: "manual"; row?: PriceRow };
+  | { kind: "manual"; row?: PriceRow | undefined };
 
 export function estimate(sel: Selection, suprafata: number): Estimate {
   const rows = filterRows(sel);

@@ -88,7 +88,7 @@ export function PriceWizard() {
       if (partial[key]) continue;
       const options = optionsFor(key, partial);
       if (options.length === 0) continue;
-      if (options.length === 1) {
+      if (options.length === 1 && options[0]) {
         partial[key] = options[0];
         continue;
       }
