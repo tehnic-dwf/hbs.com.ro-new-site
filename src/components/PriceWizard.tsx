@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, Camera, MessageCircle, Phone } from "lucide-react";
 
 import { contact, whatsappLink } from "@/lib/site";
