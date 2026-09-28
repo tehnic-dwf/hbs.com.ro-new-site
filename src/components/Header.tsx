@@ -18,7 +18,13 @@ export function Header() {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
-    const renderGroup = (group: (typeof menuGroups)[number]) => {
+      return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+
+const renderGroup = (group: (typeof menuGroups)[number]) => {
               const expanded = openGroup === group.label;
               return (
                 <div key={group.label} className="border-b border-border">
@@ -69,11 +75,6 @@ export function Header() {
                 </div>
               );
   };
-
-  return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
 
 
   return (
